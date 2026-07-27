@@ -85,12 +85,15 @@ As fases 1 a 3 não dependem de nenhuma informação que falta, então começam 
 
 ## Fase 6, publicação
 
-1. `next.config.ts` com `output: "export"`. **Sem `basePath`**, porque repositório de usuário serve na raiz
+1. `next.config.ts` com `output: "export"`, `basePath: "/portfolio"` e `assetPrefix: "/portfolio"`
+1b. `lib/caminhos.ts` com `caminhoPublico()`, aplicado em **toda** tag de imagem. Sem isso as imagens dão 404, porque `images.unoptimized` não prefixa o `src` sozinho. Foi exatamente o bug do projeto da clínica
 2. `.github/workflows/deploy.yml`, mesmo do projeto da clínica, com as actions nas versões atuais: checkout v7, setup-node v7, configure-pages v6, upload-pages-artifact v5, deploy-pages v5
 3. `touch out/.nojekyll` no workflow, senão o Pages ignora a pasta `_next`
 4. Criar o repositório remoto e habilitar o Pages com `build_type: workflow`
 
-**Verificação:** os arquivos da pasta `out/` respondem 200 no domínio publicado. Conferir explicitamente as imagens, que foi onde o projeto da clínica quebrou.
+**Verificação:** os arquivos da pasta `out/` respondem 200 no domínio publicado. Conferir explicitamente as imagens, que foi onde o projeto da clínica quebrou. O teste é varrer o HTML gerado e confirmar que nenhum `src` ou `href` sai sem o prefixo `/portfolio`.
+
+**Não encostar em** `linykercs.github.io`, que hospeda o site da Clínica Flávia Franco em produção.
 
 ---
 

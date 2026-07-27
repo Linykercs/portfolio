@@ -122,11 +122,15 @@ Um único componente cliente, a lente. Todo o resto é Server Component.
 
 ## Publicação
 
-Repositório **`linykercs.github.io`**.
+Repositório **`portfolio`**, servindo em `linykercs.github.io/portfolio`.
 
-Sendo repositório de usuário, serve na raiz, sem `basePath`, e a URL fica limpa para currículo e LinkedIn. Isso também evita o problema encontrado no projeto da clínica, em que `images.unoptimized` não aplica o `basePath` ao `src` das imagens.
+O repositório de usuário `linykercs.github.io` **já está ocupado** pelo site da Clínica Flávia Franco, publicado e no ar desde junho de 2026, com Pages em modo legado. Usar a raiz derrubaria aquele site, então o portfólio vai para repositório próprio, em subpasta.
+
+Consequência técnica: o projeto precisa de `basePath` e `assetPrefix`. Isso traz de volta o problema encontrado no projeto da clínica, em que `images.unoptimized` **não** aplica o `basePath` ao `src` das imagens, quebrando todas elas com 404. A solução já é conhecida: um helper `caminhoPublico()` prefixando os arquivos de `public/`, aplicado em toda tag de imagem.
 
 Publicação por GitHub Actions, mesmo workflow do projeto da clínica, com as actions já nas versões atuais.
+
+**Caminho de saída, se um dia quiser a URL limpa:** domínio próprio apontado para o Pages, que dispensa o `basePath` e não mexe no site da clínica.
 
 ## Testes
 
