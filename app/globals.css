@@ -1,0 +1,80 @@
+@import "tailwindcss";
+
+/* ==========================================================================
+   TEMA
+   ==========================================================================
+   Os valores das cores NÃO ficam aqui. Vêm de `config/conteudo.ts` e são
+   aplicados na tag <html> por `app/layout.tsx` como variáveis CSS.
+   Este bloco só conecta essas variáveis ao Tailwind, gerando as classes
+   bg-fundo, text-neon, border-linha e as demais.
+
+   Para trocar a identidade visual, edite `config/conteudo.ts`.
+   ========================================================================== */
+@theme inline {
+  --color-fundo: var(--cor-fundo);
+  --color-superficie: var(--cor-superficie);
+  --color-linha: var(--cor-linha);
+  --color-neon: var(--cor-neon);
+  --color-quente: var(--cor-quente);
+  --color-texto: var(--cor-texto);
+  --color-fraco: var(--cor-fraco);
+
+  /* Carregadas com next/font em `app/layout.tsx`. */
+  --font-titulo: var(--fonte-titulo);
+  --font-corpo: var(--fonte-corpo);
+  --font-mono: var(--fonte-mono);
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
+  /* Compensa o topo fixo ao pular para uma âncora. */
+  [id] {
+    scroll-margin-top: 5rem;
+  }
+
+  body {
+    background-color: var(--cor-fundo);
+    color: var(--cor-texto);
+    font-family: var(--fonte-corpo), system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  h1,
+  h2,
+  h3 {
+    color: var(--cor-texto);
+    font-family: var(--fonte-titulo), system-ui, sans-serif;
+    font-weight: 400;
+    letter-spacing: -0.02em;
+    line-height: 0.92;
+    text-transform: uppercase;
+    text-wrap: balance;
+  }
+
+  ::selection {
+    background: var(--cor-neon);
+    color: var(--cor-fundo);
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--cor-neon);
+    outline-offset: 3px;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+}
