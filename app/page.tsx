@@ -20,7 +20,7 @@ export default function Home() {
         Fase 3 · verificação da lente
       </p>
 
-      <h1 className="mt-6 text-6xl sm:text-8xl">{conteudo.marca.nome}</h1>
+      <h1 className="mt-6 text-6xl sm:text-8xl">{conteudo.marca.exibicao}</h1>
 
       <Lente
         foto={foto}
