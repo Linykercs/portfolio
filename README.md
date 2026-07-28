@@ -1,36 +1,62 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# portfolio
 
-## Getting Started
+Portfólio do Linyker Mendes Coelho.
 
-First, run the development server:
+**No ar:** https://linykercs.github.io/portfolio
+
+Next.js 16 com App Router, TypeScript e Tailwind 4, exportado como site
+estático e publicado no GitHub Pages por GitHub Actions.
+
+## Como rodar
 
 ```bash
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+O site abre em http://localhost:3000/portfolio, e não na raiz, porque o
+`basePath` vale também em desenvolvimento.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+| Comando | O que faz |
+| --- | --- |
+| `npm run dev` | Servidor de desenvolvimento |
+| `npm run build` | Gera o site estático em `out/` |
+| `npm run lint` | ESLint |
+| `npm run typecheck` | TypeScript sem emitir |
+| `npm run conferir` | Confere o prefixo de caminho no HTML gerado |
+| `npm run imagens:recortar` | Recorta a foto de perfil |
+| `npm run imagens:robo` | Gera a versão neon da foto |
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Decisões que valem a leitura
 
-## Learn More
+**Todo o conteúdo vive em `config/conteudo.ts`.** Nenhum componente escreve
+texto ou cor na mão. Trocar uma frase ou repintar o site inteiro é editar um
+arquivo de dados.
 
-To learn more about Next.js, take a look at the following resources:
+**A lente é o único componente cliente.** Ela empilha duas imagens e recorta a
+de cima num círculo que segue o ponteiro. A posição é escrita direto no `style`
+por um `ref`, sem passar por estado do React, porque estado redesenharia o
+componente sessenta vezes por segundo para mudar uma string de CSS. As medidas
+são percentuais, então a lente acompanha qualquer tamanho de tela sem ouvinte
+de `resize`. E a suavização usa o tempo decorrido, não uma fração fixa por
+quadro, senão a velocidade ficaria amarrada à taxa de atualização do monitor.
+Detalhes em `components/Lente.tsx`.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+**A versão neon da foto é gerada em código**, por detecção de borda, a partir da
+mesma imagem já recortada. Sair da mesma imagem garante que as duas tenham
+enquadramento idêntico por construção: qualquer diferença de ângulo viraria um
+salto visível quando a lente passasse. O script roda uma vez, na mão, e o
+resultado é commitado, para o build não depender de biblioteca de imagem.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+**`npm run conferir` existe por causa de um bug antigo.** O site mora numa
+subpasta, então todo caminho absoluto precisa do prefixo `/portfolio`. Um
+caminho sem o prefixo aponta para a raiz do domínio e vira 404, mas o build
+passa, o deploy passa, e só quem visita descobre. O script varre o HTML gerado e
+transforma esse erro silencioso em build vermelho. Roda no CI antes de publicar.
 
-## Deploy on Vercel
+## Estudo de caso
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+A rota [`/prospecta`](https://linykercs.github.io/portfolio/prospecta) é a
+página profunda do site: uma decisão de custo que desenhou um projeto inteiro,
+um bug de deduplicação que descartava dados sem avisar, e um teste cujo único
+trabalho é impedir que os outros testes usem a internet.
