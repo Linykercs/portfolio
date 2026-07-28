@@ -1,0 +1,80 @@
+# =============================================================================
+# PUBLICAÇÃO NO GITHUB PAGES
+# =============================================================================
+#
+# Builda o site estático e publica em linykercs.github.io/portfolio.
+#
+# O Pages precisa estar configurado com "GitHub Actions" como origem, e não
+# com "Deploy from a branch". Sem isso este workflow roda, fica verde, e não
+# publica nada.
+#
+# NÃO ENCOSTA no repositório `linykercs.github.io`, que hospeda o site da
+# Clínica Flávia Franco em produção.
+# =============================================================================
+
+name: deploy
+
+on:
+  push:
+    branches: [main]
+  # Permite republicar sem precisar de commit novo.
+  workflow_dispatch:
+
+# Só uma publicação por vez. Se entrar commit novo no meio de um deploy, o
+# novo espera o anterior terminar em vez de cancelá-lo: cancelar publicação
+# pela metade pode deixar o site num estado misturado.
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 22
+          cache: npm
+
+      # `npm ci` em vez de `npm install`: instala exatamente o que está no
+      # package-lock.json e falha se os dois estiverem fora de sincronia.
+      - run: npm ci
+
+      - run: npm run lint
+      - run: npm run typecheck
+      - run: npm run build
+
+      # As imagens e o CSS quebram silenciosamente se algum caminho absoluto
+      # sair sem o prefixo /portfolio. Este passo transforma isso em falha de
+      # build, antes de chegar no ar.
+      - run: npm run conferir
+
+      # Sem isso o Pages trata a saída como site Jekyll e ignora toda pasta
+      # que começa com underscore, o que apaga a `_next` inteira.
+      - run: touch out/.nojekyll
+
+      - uses: actions/configure-pages@v6
+
+      - uses: actions/upload-pages-artifact@v5
+        with:
+          path: out
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+
+    # Exigidas pelo deploy-pages: escrever no Pages e provar a identidade do
+    # job para o serviço de publicação.
+    permissions:
+      pages: write
+      id-token: write
+
+    environment:
+      name: github-pages
+      url: ${{ steps.publicar.outputs.page_url }}
+
+    steps:
+      - id: publicar
+        uses: actions/deploy-pages@v5
