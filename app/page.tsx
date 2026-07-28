@@ -1,69 +1,42 @@
+import { Lente } from "@/components/Lente";
 import { conteudo } from "@/config/conteudo";
+import robo from "@/public/imagens/linyker-robo.png";
+import foto from "@/public/imagens/linyker.jpg";
 
 /**
- * PÁGINA TEMPORÁRIA DE VERIFICAÇÃO, fase 1.
+ * PÁGINA TEMPORÁRIA DE VERIFICAÇÃO, fase 3.
  *
- * Existe só para provar que o tema e a tipografia estão ligados de ponta a
- * ponta. Será substituída pelo conteúdo real na fase 4.
+ * Existe só para exercitar a lente sozinha, antes de haver página em volta.
+ * Será substituída pelo conteúdo real na fase 4.
  *
- * O que ela verifica:
- *   - Anton nos títulos, Geist no corpo, Geist Mono nos rótulos
- *   - cada cor do config chegando ao Tailwind como classe utilitária
- *   - o valor em hex ao lado, para comparar com o que está pintado
+ * As imagens entram por importação estática, e não por caminho em texto. Assim
+ * o Next resolve a URL e as dimensões, o que evita salto de layout e já deixa
+ * o `basePath` resolvido para quando o site for para uma subpasta na fase 6.
  */
-
-/** Amostras, com a classe do Tailwind ao lado da chave do config. */
-const AMOSTRAS = [
-  { chave: "fundo", classe: "bg-fundo" },
-  { chave: "superficie", classe: "bg-superficie" },
-  { chave: "linha", classe: "bg-linha" },
-  { chave: "neon", classe: "bg-neon" },
-  { chave: "quente", classe: "bg-quente" },
-  { chave: "texto", classe: "bg-texto" },
-  { chave: "fraco", classe: "bg-fraco" },
-] as const;
-
 export default function Home() {
   return (
-    <main className="mx-auto w-full max-w-4xl px-6 py-20">
+    <main className="mx-auto flex w-full max-w-4xl flex-col items-center px-6 py-20">
       <p className="font-mono text-xs uppercase tracking-[0.2em] text-neon">
-        Fase 1 · verificação de base
+        Fase 3 · verificação da lente
       </p>
 
       <h1 className="mt-6 text-6xl sm:text-8xl">{conteudo.marca.nome}</h1>
 
-      <p className="mt-6 max-w-xl text-lg leading-relaxed text-fraco">
-        Este parágrafo está em Geist e o título acima em Anton. Se as duas
-        fontes parecerem iguais, o <code className="font-mono text-neon">next/font</code>{" "}
-        não carregou e o navegador caiu na fonte do sistema.
-      </p>
+      <Lente
+        foto={foto}
+        robo={robo}
+        alt="Linyker, retrato em frente à Torre Eiffel"
+        className="mt-12 w-full max-w-sm rounded"
+      />
 
-      <h2 className="mt-16 text-2xl">Cores vindas do config</h2>
-
-      <ul className="mt-6 flex flex-col gap-px overflow-hidden rounded border border-linha">
-        {AMOSTRAS.map((amostra) => (
-          <li
-            key={amostra.chave}
-            className="flex items-center gap-5 bg-superficie px-5 py-4"
-          >
-            <span
-              className={`${amostra.classe} size-10 shrink-0 rounded border border-linha`}
-              aria-hidden="true"
-            />
-            <span className="font-mono text-sm text-texto">{amostra.chave}</span>
-            <span className="font-mono text-sm text-fraco">{amostra.classe}</span>
-            <span className="ml-auto font-mono text-sm tabular-nums text-fraco">
-              {conteudo.tema.cores[amostra.chave]}
-            </span>
-          </li>
-        ))}
+      <ul className="mt-12 max-w-md list-disc space-y-2 pl-5 text-sm text-fraco">
+        <li>No computador, o círculo segue o ponteiro e fecha ao sair da foto.</li>
+        <li>
+          Num aparelho de toque, a lente passeia sozinha e não atrapalha a
+          rolagem.
+        </li>
+        <li>Com movimento reduzido ligado no sistema, ela fica parada.</li>
       </ul>
-
-      <p className="mt-8 text-sm text-fraco">
-        O quadrado é pintado pela classe do Tailwind. O código ao lado vem
-        direto do arquivo de configuração. Se os dois combinarem, a ligação
-        entre config, variável CSS e Tailwind está funcionando.
-      </p>
     </main>
   );
 }
