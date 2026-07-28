@@ -1,42 +1,42 @@
-import { Lente } from "@/components/Lente";
+import { Contato } from "@/components/Contato";
+import { Faixa } from "@/components/Faixa";
+import { Stack } from "@/components/Stack";
+import { Topo } from "@/components/Topo";
 import { conteudo } from "@/config/conteudo";
-import robo from "@/public/imagens/linyker-robo.png";
-import foto from "@/public/imagens/linyker.jpg";
 
 /**
- * PÁGINA TEMPORÁRIA DE VERIFICAÇÃO, fase 3.
+ * A HOME.
  *
- * Existe só para exercitar a lente sozinha, antes de haver página em volta.
- * Será substituída pelo conteúdo real na fase 4.
+ * Uma rota só, composta de seções. Todo o texto vem de `config/conteudo.ts`;
+ * nenhum componente escreve conteúdo na mão. Trocar uma frase é editar um
+ * arquivo de dados, não caçar JSX.
  *
- * As imagens entram por importação estática, e não por caminho em texto. Assim
- * o Next resolve a URL e as dimensões, o que evita salto de layout e já deixa
- * o `basePath` resolvido para quando o site for para uma subpasta na fase 6.
+ * Tudo aqui é Server Component. O único componente cliente do site é a lente,
+ * lá dentro do topo.
  */
 export default function Home() {
+  const { emProducao, dePontaAPonta } = conteudo;
+
   return (
-    <main className="mx-auto flex w-full max-w-4xl flex-col items-center px-6 py-20">
-      <p className="font-mono text-xs uppercase tracking-[0.2em] text-neon">
-        Fase 3 · verificação da lente
-      </p>
+    <main className="mx-auto w-full max-w-5xl px-6">
+      <Topo />
 
-      <h1 className="mt-6 text-6xl sm:text-8xl">{conteudo.marca.exibicao}</h1>
-
-      <Lente
-        foto={foto}
-        robo={robo}
-        alt="Linyker, retrato em frente à Torre Eiffel"
-        className="mt-12 w-full max-w-sm rounded"
+      <Faixa
+        id="em-producao"
+        titulo={emProducao.titulo}
+        resumo={emProducao.resumo}
+        itens={emProducao.itens}
       />
 
-      <ul className="mt-12 max-w-md list-disc space-y-2 pl-5 text-sm text-fraco">
-        <li>No computador, o círculo segue o ponteiro e fecha ao sair da foto.</li>
-        <li>
-          Num aparelho de toque, a lente passeia sozinha e não atrapalha a
-          rolagem.
-        </li>
-        <li>Com movimento reduzido ligado no sistema, ela fica parada.</li>
-      </ul>
+      <Faixa
+        id="de-ponta-a-ponta"
+        titulo={dePontaAPonta.titulo}
+        resumo={dePontaAPonta.resumo}
+        itens={dePontaAPonta.itens}
+      />
+
+      <Stack />
+      <Contato />
     </main>
   );
 }

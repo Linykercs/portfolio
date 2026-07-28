@@ -44,6 +44,148 @@ export const conteudo = {
   },
 
   /* ======================================================================== */
+  /* EM PRODUÇÃO                                                              */
+  /* ======================================================================== */
+  /**
+   * Sistemas dos quais outras pessoas dependem. É a metade da página que
+   * responde "ele aguenta produção?", que é a pergunta que separa quem já
+   * quebrou algo no ar de quem só entregou trabalho de faculdade.
+   */
+  emProducao: {
+    titulo: "Em produção",
+    resumo:
+      "Sistemas que outras pessoas usam todo dia, e que quebram de verdade quando eu erro.",
+    itens: [
+      {
+        nome: "B2List",
+        papel: "Suporte, desenvolvimento e QA · desde ago/2025",
+        problema:
+          "Plataforma B2B de força de vendas usada em campo na América Latina, com mais de 50 clientes ativos, entre eles Minerva Foods, P&G Latam e Hypera.",
+        decisao:
+          "Construí sozinho um pipeline em Python que integra PostgreSQL e Firebase, aplica as regras de negócio e publica dashboards HTML de monitoramento em execução agendada. No suporte, diagnostico e valido chamadas de API no Postman, em português, inglês e espanhol.",
+        ferramentas: ["Python", "PostgreSQL", "Firebase", "MongoDB", "Postman"],
+        /**
+         * Sem link e sem print, e é de propósito: é código de cliente. Os nomes
+         * das empresas aparecem porque o Linyker autorizou em 28/07/2026, e
+         * porque já constam do currículo dele.
+         */
+        nota: "Código fechado, por ser de cliente.",
+        links: [],
+      },
+      {
+        nome: "Fluxo de Caixa",
+        papel: "Projeto pessoal, no ar desde 2026",
+        problema:
+          "Controle financeiro que eu uso de verdade, com dados reais. Um erro aqui não gera bug, gera prejuízo.",
+        decisao:
+          "Self-hosted, sem plataforma paga. Fastify e Prisma no servidor, React e Vite numa PWA, bot do Telegram para lançar de qualquer lugar. Tem CI, backup diário e um healthcheck que avisa no Telegram quando o app cai e reconfigura o webhook sozinho quando a URL do túnel muda.",
+        ferramentas: ["TypeScript", "Fastify", "Prisma", "SQLite", "React", "Vite", "PWA"],
+        links: [
+          { rotulo: "código", href: "https://github.com/Linykercs/fluxo-de-caixa" },
+        ],
+      },
+    ],
+  },
+
+  /* ======================================================================== */
+  /* DE PONTA A PONTA                                                         */
+  /* ======================================================================== */
+  /**
+   * Projetos levados do nada até o deploy. A outra metade da história: além de
+   * sustentar sistema, ele constrói do zero. É o que uma vaga full-stack
+   * procura.
+   *
+   * Só o Plim tem código aberto. Os outros dois estão fechados por decisão do
+   * Linyker, e a página diz isso em vez de deixar o leitor procurar um link
+   * que não existe. Some o link, fica o motivo.
+   */
+  dePontaAPonta: {
+    titulo: "De ponta a ponta",
+    resumo: "Do arquivo vazio até estar rodando na mão de alguém.",
+    itens: [
+      {
+        nome: "Plim",
+        papel: "Desenvolvedor único",
+        problema:
+          "Criança de 5 a 11 anos em reabilitação pélvica abandona o tratamento porque exercício diário é chato e o progresso é invisível.",
+        decisao:
+          "App terapêutico feito com pós-graduandas em Estomaterapia do Hospital Israelita Albert Einstein. 22 telas, dois perfis separados para criança e responsável, minigames no lugar da planilha de exercício, e relatório em PDF para levar ao médico. Arquitetura offline-first, porque consultório e casa nem sempre têm rede.",
+        ferramentas: ["TypeScript", "React Native", "Expo", "Zustand"],
+        links: [{ rotulo: "código", href: "https://github.com/Linykercs/Plim" }],
+      },
+      {
+        nome: "prospecta",
+        papel: "Projeto pessoal",
+        problema:
+          "Achar negócios locais que ainda não têm site, para oferecer a eles a criação de um.",
+        decisao:
+          "A Google Places API resolveria, mas pede cartão de crédito mesmo na cota gratuita. Ficou OpenStreetMap, custo zero de verdade. São 146 testes, nenhum deles toca a rede, e um teste existe só para garantir isso.",
+        numeros: [
+          { valor: "146", rotulo: "testes" },
+          { valor: "796", rotulo: "leads na última varredura" },
+          { valor: "R$ 0", rotulo: "de custo" },
+        ],
+        ferramentas: ["Python", "OpenStreetMap", "pytest"],
+        nota: "Código fechado por ora.",
+        links: [{ rotulo: "estudo de caso", href: "/prospecta", interno: true }],
+      },
+      {
+        nome: "LD Pecuária",
+        papel: "Desenvolvedor único, para um cliente real",
+        problema:
+          "Gestão de rebanho e custo de formulação tocada numa planilha de Excel, com os números certos misturados aos errados.",
+        decisao:
+          "App de gestão levado da planilha ao ar, self-hosted, com login por Google e importação dos dados reais que já existiam na planilha.",
+        ferramentas: ["Next.js", "Prisma", "PostgreSQL", "Auth.js", "Recharts"],
+        nota: "Código e acesso fechados, por ser de cliente.",
+        links: [],
+      },
+    ],
+  },
+
+  /* ======================================================================== */
+  /* STACK                                                                    */
+  /* ======================================================================== */
+  /**
+   * Sem barra de porcentagem. Ninguém consegue medir "78% de Python", e o
+   * leitor técnico sabe disso: a barra inventada tira credibilidade do resto
+   * da página em vez de somar.
+   *
+   * Só entra aqui o que aparece em algum projeto citado acima. É a mesma regra
+   * do resto do site, afirmação com prova ao lado.
+   */
+  stack: {
+    titulo: "Stack",
+    grupos: [
+      {
+        rotulo: "Linguagens",
+        itens: ["TypeScript", "JavaScript", "Python", "Java", "SQL"],
+      },
+      {
+        rotulo: "Front",
+        itens: ["React", "Next.js", "React Native", "Expo", "Tailwind", "Vite"],
+      },
+      {
+        rotulo: "Back e dados",
+        itens: [
+          "Node.js",
+          "Fastify",
+          "Spring Boot",
+          "Prisma",
+          "PostgreSQL",
+          "MongoDB",
+          "SQLite",
+          "Firebase",
+        ],
+      },
+      {
+        rotulo: "Ferramentas",
+        itens: ["Git", "Docker", "GitHub Actions", "pytest", "Postman", "APIs de LLM"],
+      },
+    ],
+  },
+
+  /* ======================================================================== */
   /* TEMA                                                                     */
   /* ======================================================================== */
   /**
