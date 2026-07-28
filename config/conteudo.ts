@@ -16,11 +16,31 @@ export const conteudo = {
   /* MARCA                                                                    */
   /* ======================================================================== */
   marca: {
-    // PENDENTE: confirmar o nome completo com o Linyker.
-    nome: "Linyker",
-    // PENDENTE: título profissional, item 6 da lista "A confirmar" da spec.
-    titulo: "",
-    descricao: "",
+    nome: "Linyker Mendes Coelho",
+    /**
+     * O que ocupa a tela no topo. O nome inteiro em Anton caixa alta não cabe
+     * em largura de celular sem virar quatro linhas, então o display usa a
+     * forma curta e o nome completo fica nos metadados e no rodapé.
+     */
+    exibicao: "Linyker",
+    /**
+     * Alvo declarado: vaga de desenvolvedor full-stack júnior.
+     * Decidido em 28/07/2026, junto com o Linyker.
+     */
+    titulo: "Desenvolvedor full-stack",
+    /** A linha embaixo do nome. PENDENTE: o Linyker ainda vai revisar. */
+    descricao:
+      "Sustento uma plataforma B2B usada em campo na América Latina e construo do zero até o deploy.",
+  },
+
+  /* ======================================================================== */
+  /* CONTATO                                                                  */
+  /* ======================================================================== */
+  contato: {
+    email: "linyker02@gmail.com",
+    linkedin: "https://www.linkedin.com/in/linyker-mendes-coelho-20068a34b/",
+    github: "https://github.com/Linykercs",
+    cidade: "Uberlândia, MG",
   },
 
   /* ======================================================================== */
