@@ -43,7 +43,13 @@ jobs:
       - run: npm ci
 
       - run: npm run lint
+
+      # `typecheck` roda `next typegen` antes do `tsc`. Sem isso ele quebra em
+      # máquina limpa: quem declara os tipos das imagens importadas é o
+      # `next-env.d.ts`, que o Next gera e o `.gitignore` não versiona. Local
+      # passava porque o arquivo já existia de um build anterior.
       - run: npm run typecheck
+
       - run: npm run build
 
       # As imagens e o CSS quebram silenciosamente se algum caminho absoluto
