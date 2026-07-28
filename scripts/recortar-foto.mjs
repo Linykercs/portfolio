@@ -24,19 +24,19 @@ import sharp from "sharp";
 
 /** Original, se nenhum caminho for passado na linha de comando. */
 const ORIGINAL_PADRAO =
-  "C:/Users/Linyker/Downloads/WhatsApp Image 2026-07-27 at 15.16.12.jpeg";
+  "C:/Users/Linyker/Downloads/WhatsApp Image 2026-07-27 at 15.16.14.jpeg";
 
 const SAIDA = "public/imagens/linyker.jpg";
 
 /**
- * Janela do recorte, em pixels do original (959x1280).
+ * Janela do recorte, em pixels do original (1280x960, paisagem).
  *
- * Proporção 4:5, exigida pela spec. O corte encosta na base do original de
- * propósito: é o mais alto que dá para subir a moldura ainda mostrando ombro,
- * e é o que joga os olhos para o terço superior. Sobrou uma faixa de céu à
- * direita que não entra, daí o recorte não estar centrado na largura.
+ * Proporção 4:5, exigida pela spec. O rosto está à direita do quadro original,
+ * então a janela não é centrada na largura. A altura é o máximo que cabe sem
+ * estourar a base, para não jogar fora resolução: o original é paisagem, e
+ * depois do corte em retrato sobra pouco pixel.
  */
-const JANELA = { left: 251, top: 520, width: 608, height: 760 };
+const JANELA = { left: 509, top: 255, width: 512, height: 640 };
 
 const original = process.argv[2] ?? ORIGINAL_PADRAO;
 

@@ -69,7 +69,7 @@ const PARAMETROS = {
    * em foco do prédio desfocado atrás.
    * Maior = fundo mais limpo, e risco de perder o contorno do rosto junto.
    */
-  limiar: 0.24,
+  limiar: 0.28,
 
   /**
    * Largura da rampa acima do limiar. Sem ela o traço fica serrilhado.
@@ -88,6 +88,24 @@ const PARAMETROS = {
    * Abaixo de 1 acende os traços fracos, acima de 1 deixa só os fortes.
    */
   gama: 0.68,
+
+  /**
+   * Atenuação do traço por distância, dentro de uma elipse centrada na pessoa.
+   *
+   * Existe porque a foto escolhida tem o FUNDO EM FOCO: a torre, o guindaste e
+   * as diagonais do piso têm borda tão forte quanto o rosto, e nenhum limiar
+   * separa as duas coisas, já que ambas são nítidas. A elipse ao menos apaga a
+   * periferia, que é onde o fundo aparece sozinho.
+   *
+   * É paliativo, não solução. Separar pessoa de fundo em foco pediria
+   * segmentação de imagem, que é outra técnica e outro tamanho de problema.
+   * Numa foto de fundo desfocado nada disto seria necessário: bastaria trocar
+   * por `atenuacao: null`.
+   *
+   * Medidas em fração da caixa. `borda` é a largura da transição: maior deixa
+   * o apagamento mais gradual e menos perceptível como recorte.
+   */
+  atenuacao: { cx: 0.58, cy: 0.5, rx: 0.4, ry: 0.48, borda: 0.45 },
 };
 
 /** `#B8FF3C` vira `[184, 255, 60]`. */
@@ -221,6 +239,21 @@ for (let i = 0; i < forca.length; i += 1) {
 }
 
 const grosso = engrossar(traco, largura, altura, PARAMETROS.espessura);
+
+if (PARAMETROS.atenuacao) {
+  const { cx, cy, rx, ry, borda } = PARAMETROS.atenuacao;
+  for (let y = 0; y < altura; y += 1) {
+    for (let x = 0; x < largura; x += 1) {
+      // Distância até o centro medida em "elipses": 1 é a borda da elipse.
+      const dx = (x / largura - cx) / rx;
+      const dy = (y / altura - cy) / ry;
+      const raio = Math.hypot(dx, dy);
+
+      const rampeado = Math.max(0, Math.min(1, (1 + borda - raio) / borda));
+      grosso[y * largura + x] *= rampeado * rampeado * (3 - 2 * rampeado);
+    }
+  }
+}
 
 const [fundoR, fundoG, fundoB] = hexParaRgb(conteudo.tema.cores.fundo);
 const [neonR, neonG, neonB] = hexParaRgb(conteudo.tema.cores.neon);
