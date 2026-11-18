@@ -21,6 +21,10 @@ import { Codigo } from "@/components/Codigo";
  *   tabela de contexto .. gpt-oss-20b com juiz gpt-oss-120b, top_k 6
  *                         (44235001930), 10 (44235997544) e 15 (44237238393):
  *                         context hit 5, 8, 8 e corretude 4, 8, 9 de 10
+ *   híbrida e prompt .... 14 perguntas, top_k 10: vetorial 44346040496
+ *                         (comportamento 12/14, contexto 9/11), híbrida
+ *                         44348116327 (contexto 7/11), vetorial + prompt
+ *                         44351053018 (comportamento 13/14, corretude 8/11)
  *
  * Os trechos de código são cópia do repositório, só encurtados.
  */
@@ -284,10 +288,31 @@ def missing_from_context(terms, answer):
       <p className="mt-4 leading-relaxed text-texto">
         Teve custo. Com mais contexto, a pergunta ambígua (&quot;meu pagamento
         não apareceu&quot;) passou a ser respondida em vez de gerar um pedido de
-        contexto, e a resposta sugeriu um endpoint fora dos trechos. Duas
-        perguntas ainda não recebem o trecho certo: uma pede eventos espalhados
-        por três seções da página, a outra depende de um passo a passo da
-        interface. Busca híbrida é o próximo teste.
+        contexto, e a resposta sugeriu um endpoint fora dos trechos. Um ajuste
+        no prompt proibiu sugestão fora dos trechos, mesmo com
+        &quot;normalmente&quot;, e separou relato de problema específico de
+        relato vago. O comportamento voltou a 13 de 14, sem perder corretude.
+      </p>
+
+      {/* ==================================================================== */}
+      <h2 className="mt-20 text-2xl sm:text-3xl">O teste que piorou</h2>
+
+      <p className="mt-6 leading-relaxed text-texto">
+        Duas perguntas ainda não recebem o trecho certo, e a aposta óbvia era
+        busca híbrida: somar busca por palavras, com o full-text do próprio
+        Postgres, à vetorial. Medi, e o trecho certo passou a chegar em{" "}
+        <strong className="font-normal text-neon">7 de 11</strong> perguntas,
+        contra 9 só com a vetorial.
+      </p>
+
+      <p className="mt-4 leading-relaxed text-texto">
+        A pergunta &quot;quais eventos existem para cobranças?&quot; explica. Os
+        termos que faltavam no contexto, como{" "}
+        <code className="font-mono text-neon">PAYMENT_CREATED</code>, não estão
+        na pergunta, então a busca por palavras não tem o que procurar, e
+        palavras comuns como &quot;webhook&quot; puxam trechos genéricos. O
+        código ficou, desligado. O problema dessas duas perguntas é o chunking,
+        que quebra a lista de eventos em três seções.
       </p>
 
       {/* ==================================================================== */}
