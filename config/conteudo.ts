@@ -24,10 +24,11 @@ export const conteudo = {
      */
     exibicao: "Linyker",
     /**
-     * Alvo declarado: vaga de desenvolvedor full-stack júnior.
-     * Decidido em 28/07/2026, junto com o Linyker.
+     * Alvo declarado: vaga de desenvolvedor full-stack júnior (28/07/2026).
+     * Em 18/11/2026 ganhou a parte de IA, para alinhar com o GitHub e o
+     * LinkedIn, que já falam em aplicações com IA, sem tirar o full-stack.
      */
-    titulo: "Desenvolvedor full-stack",
+    titulo: "Desenvolvedor full-stack e de IA aplicada",
     /** A linha embaixo do nome. PENDENTE: o Linyker ainda vai revisar. */
     descricao:
       "Sustento uma plataforma B2B usada em campo na América Latina e construo do zero até o deploy.",
