@@ -25,6 +25,9 @@ import { Codigo } from "@/components/Codigo";
  *                         (comportamento 12/14, contexto 9/11), híbrida
  *                         44348116327 (contexto 7/11), vetorial + prompt
  *                         44351053018 (comportamento 13/14, corretude 8/11)
+ *   expansão ............ mesma branch: desligada 44359162190 (contexto 9/11,
+ *                         corretude 6/11), 3 melhores 44361703035 (contexto
+ *                         10/11, corretude 8/11); 8 e 6 com a mesma config
  *
  * Os trechos de código são cópia do repositório, só encurtados.
  */
@@ -313,6 +316,34 @@ def missing_from_context(terms, answer):
         palavras comuns como &quot;webhook&quot; puxam trechos genéricos. O
         código ficou, desligado. O problema dessas duas perguntas é o chunking,
         que quebra a lista de eventos em três seções.
+      </p>
+
+      {/* ==================================================================== */}
+      <h2 className="mt-20 text-2xl sm:text-3xl">Buscar pequeno, responder grande</h2>
+
+      <p className="mt-6 leading-relaxed text-texto">
+        Trechos maiores não resolviam: o modelo de embeddings corta o texto em
+        512 tokens, e a busca perderia precisão. A saída foi separar as duas
+        coisas. A busca continua com trechos pequenos, e os três mais bem
+        colocados levam junto os vizinhos na página e o resto da sua seção, até
+        6.000 caracteres. Para isso, cada trecho passou a guardar a posição na
+        página.
+      </p>
+
+      <p className="mt-4 leading-relaxed text-texto">
+        A lista de eventos passou a chegar inteira, e o contexto certo subiu de
+        9 para{" "}
+        <strong className="font-normal text-neon">10 de 11</strong> perguntas.
+        A resposta da lista ainda erra, por outro motivo: com todos os eventos
+        à mão, o modelo resume e deixa os de estorno de fora.
+      </p>
+
+      <p className="mt-4 leading-relaxed text-texto">
+        Essa rodada também mostrou um limite da própria medição. A mesma
+        configuração, rodada em dois dias, deu 8 e 6 de 11 corretas: mesmo com
+        temperatura 0, o provedor não devolve sempre a mesma resposta. O
+        contexto recuperado não varia, então os ganhos medidos nele valem. Para
+        comparar corretude com 11 perguntas, uma rodada só não basta.
       </p>
 
       {/* ==================================================================== */}
