@@ -74,6 +74,27 @@ export const conteudo = {
         links: [],
       },
       {
+        /**
+         * Versão pública liberada pelo Linyker em 18/11/2026, sem dados
+         * pessoais. O demo usa dados fictícios gerados com a regra real de SLA.
+         */
+        nome: "Painel de incidentes",
+        papel: "Feito no suporte da B2List · em uso desde jul/2026",
+        problema:
+          "O contrato cobra prazo de resolução por severidade, e a prova de cumprimento era montada à mão em planilha, toda semana, juntando duas listas do ClickUp.",
+        decisao:
+          "Um job no GitHub Actions lê as duas listas, calcula o prazo em horas úteis e grava no Firestore; o painel mostra o SLA por severidade e avisa no Google Chat quando um prazo está perto de estourar. Atende vários clientes, cada um no seu endereço, com o acesso decidido pelas regras do Firestore. Custo zero.",
+        numeros: [
+          { valor: "102", rotulo: "testes" },
+          { valor: "R$ 0", rotulo: "de infraestrutura" },
+        ],
+        ferramentas: ["JavaScript", "Node.js", "Firebase", "Firestore", "GitHub Actions", "API do ClickUp"],
+        links: [
+          { rotulo: "demo", href: "https://linykercs.github.io/painel-incidentes/" },
+          { rotulo: "código", href: "https://github.com/Linykercs/painel-incidentes" },
+        ],
+      },
+      {
         nome: "Fluxo de Caixa",
         papel: "Projeto pessoal, no ar desde 2026",
         problema:
