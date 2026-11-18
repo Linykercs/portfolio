@@ -109,11 +109,11 @@ export const conteudo = {
         problema:
           "Responder dúvidas sobre a API do Asaas sem inventar. Em documentação de pagamento, resposta errada custa caro.",
         decisao:
-          "RAG com embeddings locais e pgvector. O modelo só usa os trechos recuperados, cita a fonte de cada afirmação e responde \"não sei\" quando a documentação não cobre. Uma suíte de evals no GitHub Actions mede retrieval, comportamento, citação e corretude, e foi ela que mostrou que o gargalo saiu do modelo e foi para o retrieval.",
+          "RAG com embeddings locais e pgvector. O modelo só usa os trechos recuperados, cita a fonte de cada afirmação e responde \"não sei\" quando a documentação não cobre. Uma suíte de evals no GitHub Actions mede retrieval, comportamento, citação e corretude, e foi ela que mostrou que o gargalo estava no contexto: com o trecho certo chegando ao modelo, a corretude dobrou sem trocar de modelo.",
         numeros: [
           { valor: "12", rotulo: "perguntas com gabarito" },
           { valor: "4", rotulo: "modelos, mesmo juiz" },
-          { valor: "2 → 6", rotulo: "de 10 corretas, do 3B ao 120B" },
+          { valor: "4 → 8", rotulo: "de 10 corretas, só ajustando o contexto" },
         ],
         ferramentas: ["Python", "FastAPI", "PostgreSQL", "pgvector", "Docker", "GitHub Actions"],
         links: [

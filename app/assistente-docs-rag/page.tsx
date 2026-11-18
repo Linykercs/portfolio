@@ -18,6 +18,9 @@ import { Codigo } from "@/components/Codigo";
  *                         (qwen3.8-27b), 44222132909 (gpt-oss-120b), todas com
  *                         o gpt-oss-120b como juiz
  *   10/12 casos pulados . run 44217760514, Gemini recusando o campo seed
+ *   tabela de contexto .. gpt-oss-20b com juiz gpt-oss-120b, top_k 6
+ *                         (44235001930), 10 (44235997544) e 15 (44237238393):
+ *                         context hit 5, 8, 8 e corretude 4, 8, 9 de 10
  *
  * Os trechos de código são cópia do repositório, só encurtados.
  */
@@ -25,14 +28,20 @@ import { Codigo } from "@/components/Codigo";
 export const metadata: Metadata = {
   title: "assistente-docs-rag, estudo de caso",
   description:
-    "Um assistente com RAG para a documentação da API do Asaas, e o que as evals " +
-    "mostraram ao comparar quatro modelos com o mesmo juiz.",
+    "Um assistente com RAG para a documentação da API do Asaas, e como as evals " +
+    "mostraram que o gargalo estava no contexto, não no modelo.",
 };
 
 const NUMEROS = [
   { valor: "12", rotulo: "perguntas com gabarito" },
   { valor: "4", rotulo: "modelos, corrigidos pelo mesmo juiz" },
-  { valor: "10/10", rotulo: "páginas certas recuperadas" },
+  { valor: "4 → 8", rotulo: "de 10 corretas, só ajustando o contexto" },
+];
+
+const CONTEXTO = [
+  { topK: "6", contexto: "5/10", corretude: "4/10" },
+  { topK: "10", contexto: "8/10", corretude: "8/10" },
+  { topK: "15", contexto: "8/10", corretude: "9/10" },
 ];
 
 const MODELOS = [
@@ -79,9 +88,9 @@ export default function AssistenteDocsRag() {
       <p className="mt-6 leading-relaxed text-texto">
         A documentação vira trechos cortados pelos títulos de cada página, os
         trechos viram vetores com um modelo de embeddings que roda na própria
-        máquina, e tudo vai para o PostgreSQL com pgvector. Na pergunta, os seis
+        máquina, e tudo vai para o PostgreSQL com pgvector. Na pergunta, os dez
         trechos mais próximos viram o contexto, e o LLM responde só com base
-        neles.
+        neles. Eram seis; mais abaixo está por que mudou.
       </p>
 
       <p className="mt-4 leading-relaxed text-texto">
@@ -208,9 +217,77 @@ if case.fonte.strip():
       <p className="mt-6 leading-relaxed text-texto">
         A página entra no contexto, mas o trecho com o detalhe pode ficar fora
         dos seis mais próximos. Nesse caso, um modelo maior não tem como
-        responder o que não recebeu. O próximo passo é medir o retrieval por
-        trecho e testar mais contexto e busca híbrida, e conferir se a corretude
-        sobe sem trocar o modelo.
+        responder o que não recebeu.
+      </p>
+
+      {/* ==================================================================== */}
+      <h2 className="mt-20 text-2xl sm:text-3xl">Mais contexto, mesmo modelo</h2>
+
+      <p className="mt-6 leading-relaxed text-texto">
+        Para testar isso, cada pergunta ganhou uma lista de termos que precisam
+        chegar ao modelo para a resposta ser possível, como{" "}
+        <code className="font-mono text-neon">User-Agent</code> e{" "}
+        <code className="font-mono text-neon">pixQrCode</code>. Conferi cada
+        termo no texto da página depois da limpeza, para a métrica não medir um
+        erro meu. A métrica nova diz se todos estão nos trechos recuperados.
+      </p>
+
+      <Codigo origem="src/assistente_docs/evals/scoring.py">{`
+def missing_from_context(terms, answer):
+    context = "\\n".join(
+        item.chunk.content for item in answer.retrieved
+    ).casefold()
+    return [t for t in terms if t.casefold() not in context]
+`}</Codigo>
+
+      <p className="mt-6 leading-relaxed text-texto">
+        Com seis trechos, a página certa vinha nas dez perguntas, mas o trecho
+        com a resposta{" "}
+        <strong className="font-normal text-neon">só em cinco</strong>. As
+        quatro perguntas que falhavam em todos os modelos estavam entre elas.
+        Depois disso, mudei só a quantidade de trechos, com o mesmo modelo de 20B
+        e o mesmo juiz.
+      </p>
+
+      <div className="mt-8 overflow-x-auto rounded border border-linha">
+        <table className="w-full min-w-[24rem] text-left text-sm">
+          <thead className="bg-superficie font-mono text-xs uppercase tracking-[0.1em] text-fraco">
+            <tr>
+              <th scope="col" className="px-4 py-3 font-normal">Trechos</th>
+              <th scope="col" className="px-4 py-3 font-normal">Termos no contexto</th>
+              <th scope="col" className="px-4 py-3 font-normal">Corretude</th>
+            </tr>
+          </thead>
+          <tbody className="font-mono tabular-nums">
+            {CONTEXTO.map((linha) => (
+              <tr key={linha.topK} className="border-t border-linha">
+                <th scope="row" className="px-4 py-3 font-normal text-texto">
+                  {linha.topK}
+                </th>
+                <td className="px-4 py-3 text-fraco">{linha.contexto}</td>
+                <td className="px-4 py-3 text-neon">{linha.corretude}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+
+      <p className="mt-6 leading-relaxed text-texto">
+        Com dez trechos, a corretude{" "}
+        <strong className="font-normal text-neon">dobrou, de 4 para 8</strong>,
+        sem trocar de modelo. Trocar o 20B pelo 120B tinha rendido uma pergunta.
+        O padrão do projeto passou de 6 para 10. Com 15, o contexto recuperado é
+        o mesmo, e a pergunta a mais veio de uma que continuou sem o trecho
+        certo, então é variação do modelo.
+      </p>
+
+      <p className="mt-4 leading-relaxed text-texto">
+        Teve custo. Com mais contexto, a pergunta ambígua (&quot;meu pagamento
+        não apareceu&quot;) passou a ser respondida em vez de gerar um pedido de
+        contexto, e a resposta sugeriu um endpoint fora dos trechos. Duas
+        perguntas ainda não recebem o trecho certo: uma pede eventos espalhados
+        por três seções da página, a outra depende de um passo a passo da
+        interface. Busca híbrida é o próximo teste.
       </p>
 
       {/* ==================================================================== */}
@@ -236,8 +313,8 @@ if case.fonte.strip():
 
       <p className="mt-6 leading-relaxed text-texto">
         Sem a suíte, a conclusão óbvia seria trocar por um modelo maior. Com
-        ela, dá para ver que o maior acerta uma pergunta a mais que o de 20B, e
-        que as perguntas que todos erram têm uma causa comum antes do modelo.
+        ela, o modelo maior rendeu uma pergunta, e mandar o trecho certo para o
+        modelo que já estava ali rendeu quatro.
       </p>
 
       <p className="mt-4 leading-relaxed text-texto">
