@@ -38,7 +38,7 @@ export const conteudo = {
   /* ======================================================================== */
   contato: {
     email: "linyker02@gmail.com",
-    linkedin: "https://www.linkedin.com/in/linyker-mendes-coelho-20068a34b/",
+    linkedin: "https://www.linkedin.com/in/linyker-mendes-coelho/",
     github: "https://github.com/Linykercs",
     cidade: "Uberlândia, MG",
   },
@@ -81,8 +81,54 @@ export const conteudo = {
           "Self-hosted, sem plataforma paga. Fastify e Prisma no servidor, React e Vite numa PWA, bot do Telegram para lançar de qualquer lugar. Tem CI, backup diário e um healthcheck que avisa no Telegram quando o app cai e reconfigura o webhook sozinho quando a URL do túnel muda.",
         ferramentas: ["TypeScript", "Fastify", "Prisma", "SQLite", "React", "Vite", "PWA"],
         links: [
-          { rotulo: "código", href: "https://github.com/Linykercs/fluxo-de-caixa" },
+          { rotulo: "código", href: "https://github.com/Linykercs/fluxo-caixa" },
         ],
+      },
+    ],
+  },
+
+  /* ======================================================================== */
+  /* COM IA                                                                   */
+  /* ======================================================================== */
+  /**
+   * Projetos em que o LLM é parte do sistema, não um enfeite. A pergunta que
+   * esta faixa responde é "ele sabe se o modelo está acertando?", por isso
+   * cada cartão diz como a saída do modelo é conferida.
+   *
+   * Números do assistente-docs-rag: rodadas de evals de 18/11/2026 no GitHub
+   * Actions, todas com o gpt-oss-120b como juiz. Estão linkadas no README.
+   */
+  comIa: {
+    titulo: "Com IA",
+    resumo: "LLM dentro do sistema, com a saída do modelo medida ou validada antes de valer.",
+    itens: [
+      {
+        nome: "assistente-docs-rag",
+        papel: "Projeto pessoal · nov/2026",
+        problema:
+          "Responder dúvidas sobre a API do Asaas sem inventar. Em documentação de pagamento, resposta errada custa caro.",
+        decisao:
+          "RAG com embeddings locais e pgvector. O modelo só usa os trechos recuperados, cita a fonte de cada afirmação e responde \"não sei\" quando a documentação não cobre. Uma suíte de evals no GitHub Actions mede retrieval, comportamento, citação e corretude, e foi ela que mostrou que o gargalo saiu do modelo e foi para o retrieval.",
+        numeros: [
+          { valor: "12", rotulo: "perguntas com gabarito" },
+          { valor: "4", rotulo: "modelos, mesmo juiz" },
+          { valor: "2 → 6", rotulo: "de 10 corretas, do 3B ao 120B" },
+        ],
+        ferramentas: ["Python", "FastAPI", "PostgreSQL", "pgvector", "Docker", "GitHub Actions"],
+        links: [
+          { rotulo: "estudo de caso", href: "/assistente-docs-rag", interno: true },
+          { rotulo: "código", href: "https://github.com/Linykercs/assistente-docs-rag" },
+        ],
+      },
+      {
+        nome: "Alfred",
+        papel: "Em dupla, com Felipe Gandour",
+        problema:
+          "Registrar gasto em planilha é chato o bastante para ninguém fazer. Mandar \"gastei 50 no almoço\" no WhatsApp, todo mundo faz.",
+        decisao:
+          "Dois modelos em vez de um: um pequeno classifica a intenção de toda mensagem, e só a extração de valor, categoria e data paga pelo modelo maior. A saída vem em JSON e é conferida antes de gravar; se vier inválida, a mensagem é descartada com log em vez de sujar a planilha.",
+        ferramentas: ["Node.js", "Groq", "Baileys", "Google Sheets", "React"],
+        links: [{ rotulo: "código", href: "https://github.com/Linykercs/alfred-bot" }],
       },
     ],
   },
@@ -171,8 +217,10 @@ export const conteudo = {
           "Node.js",
           "Fastify",
           "Spring Boot",
+          "FastAPI",
           "Prisma",
           "PostgreSQL",
+          "pgvector",
           "MongoDB",
           "SQLite",
           "Firebase",

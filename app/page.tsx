@@ -15,7 +15,7 @@ import { conteudo } from "@/config/conteudo";
  * lá dentro do topo.
  */
 export default function Home() {
-  const { emProducao, dePontaAPonta } = conteudo;
+  const { emProducao, comIa, dePontaAPonta } = conteudo;
 
   return (
     <main className="mx-auto w-full max-w-5xl px-6">
@@ -26,6 +26,13 @@ export default function Home() {
         titulo={emProducao.titulo}
         resumo={emProducao.resumo}
         itens={emProducao.itens}
+      />
+
+      <Faixa
+        id="com-ia"
+        titulo={comIa.titulo}
+        resumo={comIa.resumo}
+        itens={comIa.itens}
       />
 
       <Faixa
